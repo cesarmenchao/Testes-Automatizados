@@ -1,19 +1,25 @@
-import { ReactNode, createContext, useEffect, useState, } from 'react';
+import { ReactNode, createContext, useEffect, useState } from "react";
 
-import { CityProps } from '@services/getCityByNameService';
-import { getStorageCity, removeStorageCity, saveStorageCity } from '@libs/asyncStorage/cityStorage';
+import { CityProps } from "@services/getCityByNameService";
+import {
+  getStorageCity,
+  removeStorageCity,
+  saveStorageCity,
+} from "@libs/asyncStorage/cityStorage";
 
 type CityContextProviderProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 type CityContextDataProps = {
   cityIsLoading: boolean;
   city: CityProps | null;
   handleChanceCity: (city: CityProps) => void;
-}
+};
 
-export const CityContext = createContext<CityContextDataProps>({} as CityContextDataProps);
+export const CityContext = createContext<CityContextDataProps>(
+  {} as CityContextDataProps
+);
 
 export function CityProvider({ children }: CityContextProviderProps) {
   const [cityIsLoading, setCityIsLoading] = useState(true);
@@ -30,19 +36,20 @@ export function CityProvider({ children }: CityContextProviderProps) {
 
   useEffect(() => {
     setCityIsLoading(true);
-
     getStorageCity()
       .then((data) => setCity(data))
       .finally(() => setCityIsLoading(false));
   }, []);
 
   return (
-    <CityContext.Provider value={{
-      city,
-      cityIsLoading,
-      handleChanceCity
-    }}>
+    <CityContext.Provider
+      value={{
+        city,
+        cityIsLoading,
+        handleChanceCity,
+      }}
+    >
       {children}
     </CityContext.Provider>
-  )
+  );
 }
